@@ -6,16 +6,21 @@ import { ContactList } from './ContactList/ContactList';
 import { getContacts, getFilter } from 'redux/selectors';
 import { useDispatch } from 'react-redux';
 import { addContact, delContact } from 'redux/contactsSlice';
+import { fetchContacts } from 'redux/operations';
 
 export const App = () => {
-  const contacts = useSelector(getContacts);
   const filter = useSelector(getFilter);
 
   const dispatch = useDispatch();
+  const { items, isLoading, error } = useSelector(getContacts);
 
   const [firstRenderFlag, setFlag] = useState(true);
 
-  useEffect(() => { }, []);
+
+    useEffect(() => {
+      dispatch(fetchContacts());
+    }, [dispatch]);
+
 
   useEffect(() => {
     if (firstRenderFlag) {
@@ -29,14 +34,14 @@ export const App = () => {
       }
       setFlag(false);
     } else {
-      localStorage.setItem('contactList', JSON.stringify(contacts));
+      localStorage.setItem('contactList', JSON.stringify(items));
     }
-  }, [contacts, firstRenderFlag]);
+  }, [items, firstRenderFlag]);
 
   const handleSubmit = e => {
     const name = e.name;
     const number = e.number;
-    const contactsLists = [...contacts];
+    const contactsLists = [...items];
 
     if (contactsLists.findIndex(contact => name === contact.name) !== -1) {
       alert(`${name} is already in contacts.`);
@@ -47,10 +52,10 @@ export const App = () => {
 
   const handleDelete = e => {
     dispatch(delContact(e));
-  };  
+  };
 
   const getFilteredContacts = () => {
-   const filterContactsList = contacts.filter(contact => {
+    const filterContactsList = items.filter(contact => {
       return contact.name.toLowerCase().includes(filter.toLowerCase());
     });
     return filterContactsList;
@@ -78,4 +83,4 @@ export const App = () => {
       />
     </div>
   );
-}
+};

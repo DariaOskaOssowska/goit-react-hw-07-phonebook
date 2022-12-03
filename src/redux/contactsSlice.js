@@ -14,8 +14,26 @@ const initialState = {
 
 export const contactsSlice = createSlice({
   name: 'contacts',
-  initialState: initialState.contacts,
+  initialState: {
+    items: [],
+    isLoading: false,
+    error: null,
+    filter: '',
+  },
   reducers: {
+    fetchingInProgress(state) {
+      state.isLoading = true;
+    },
+    fetchingSuccess(state, action) {
+      state.isLoading = false;
+      state.error = null;
+      state.items = action.payload;
+    },
+    fetchingError(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+
     addContact: {
       reducer(state, action) {
         state.items.push(action.payload);
@@ -54,6 +72,14 @@ export const contactsSlice = createSlice({
   },
 });
 
-export const { addContact, delContact, setFilter, toggleCompleted } =
-  contactsSlice.actions;
+export const {
+  fetchingInProgress,
+  fetchingSuccess,
+  fetchingError,
+  addContact,
+  delContact,
+  setFilter,
+  toggleCompleted,
+} = contactsSlice.actions;
+
 export const contactsReducer = contactsSlice.reducer;
