@@ -5,7 +5,7 @@ import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
 import { getContacts, getFilter } from 'redux/selectors';
 import { useDispatch } from 'react-redux';
-import { addContact, delContact } from 'redux/actions';
+import { addContact, delContact } from 'redux/contactsSlice';
 
 export const App = () => {
   const contacts = useSelector(getContacts);
@@ -15,7 +15,7 @@ export const App = () => {
 
   const [firstRenderFlag, setFlag] = useState(true);
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   useEffect(() => {
     if (firstRenderFlag) {
@@ -47,10 +47,10 @@ export const App = () => {
 
   const handleDelete = e => {
     dispatch(delContact(e));
-  };
+  };  
 
   const getFilteredContacts = () => {
-    const filterContactsList = contacts.filter(contact => {
+   const filterContactsList = contacts.filter(contact => {
       return contact.name.toLowerCase().includes(filter.toLowerCase());
     });
     return filterContactsList;
@@ -78,4 +78,4 @@ export const App = () => {
       />
     </div>
   );
-};
+}
