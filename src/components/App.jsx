@@ -9,8 +9,7 @@ import { fetchContacts } from 'redux/operations';
 import { Loader } from './Loader/Loader';
 
 export const App = () => {
-  // const filter = useSelector(getFilter);
-
+  
   const dispatch = useDispatch();
   const isLoading = useSelector(getIsLoading);
   const error = useSelector(getError);
@@ -18,20 +17,6 @@ export const App = () => {
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
-
-  // const handleSubmit = e => {
-  //   const name = e.name;
-  //   const number = e.number;
-  //   const contactsLists = [...items];
-
-  //   if (contactsLists.findIndex(contact => name === contact.name) !== -1) {
-  //     alert(`${name} is already in contacts.`);
-  //   } else {
-  //     dispatch(addContact(name, number));
-  //   }
-  // };
-
-  //  const handleToggle = () => dispatch(toggleCompleted(contatc));
 
   return (
     <div
