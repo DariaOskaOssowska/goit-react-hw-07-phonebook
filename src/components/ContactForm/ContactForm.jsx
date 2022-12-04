@@ -1,11 +1,13 @@
-import propTypes from 'prop-types';
 import React from 'react';
 import { useState } from 'react';
 import css from './ContactForm.module.css';
+import { useDispatch } from 'react-redux';
+import { addContact } from 'redux/operations';
 
-export const ContactForm = ({ handleSubmit }) => {
+export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
 
   const handleChangeName = e => {
     const { value } = e.target;
@@ -20,7 +22,7 @@ export const ContactForm = ({ handleSubmit }) => {
   const handleFormSubmit = e => {
     e.preventDefault();
     const form = e.currentTarget;
-    handleSubmit({ name: name, number: number });
+    dispatch(addContact({name: name, phone: number}));
     form.reset();
   };
 
@@ -55,8 +57,4 @@ export const ContactForm = ({ handleSubmit }) => {
       </button>
     </form>
   );
-};
-
-ContactForm.propTypes = {
-  handleSubmit: propTypes.func.isRequired,
 };

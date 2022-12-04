@@ -1,65 +1,37 @@
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import React, { useState, useEffect } from 'react';
 import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
-import { getContacts, getFilter } from 'redux/selectors';
-import { useDispatch } from 'react-redux';
-import { addContact, delContact } from 'redux/contactsSlice';
+import { getIsLoading, getError } from 'redux/selectors';
 import { fetchContacts } from 'redux/operations';
+import { Loader } from './Loader/Loader';
 
 export const App = () => {
-  const filter = useSelector(getFilter);
+  // const filter = useSelector(getFilter);
 
   const dispatch = useDispatch();
-  const { items, isLoading, error } = useSelector(getContacts);
-
-  const [firstRenderFlag, setFlag] = useState(true);
-
-
-    useEffect(() => {
-      dispatch(fetchContacts());
-    }, [dispatch]);
-
+  const isLoading = useSelector(getIsLoading);
+  const error = useSelector(getError);
 
   useEffect(() => {
-    if (firstRenderFlag) {
-      const contactsFromLocalStorage = localStorage.getItem('contactList');
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
-      if (contactsFromLocalStorage !== 'undefined') {
-        const parsedContacts = JSON.parse(contactsFromLocalStorage);
+  // const handleSubmit = e => {
+  //   const name = e.name;
+  //   const number = e.number;
+  //   const contactsLists = [...items];
 
-        if (parsedContacts) {
-        }
-      }
-      setFlag(false);
-    } else {
-      localStorage.setItem('contactList', JSON.stringify(items));
-    }
-  }, [items, firstRenderFlag]);
+  //   if (contactsLists.findIndex(contact => name === contact.name) !== -1) {
+  //     alert(`${name} is already in contacts.`);
+  //   } else {
+  //     dispatch(addContact(name, number));
+  //   }
+  // };
 
-  const handleSubmit = e => {
-    const name = e.name;
-    const number = e.number;
-    const contactsLists = [...items];
-
-    if (contactsLists.findIndex(contact => name === contact.name) !== -1) {
-      alert(`${name} is already in contacts.`);
-    } else {
-      dispatch(addContact(name, number));
-    }
-  };
-
-  const handleDelete = e => {
-    dispatch(delContact(e));
-  };
-
-  const getFilteredContacts = () => {
-    const filterContactsList = items.filter(contact => {
-      return contact.name.toLowerCase().includes(filter.toLowerCase());
-    });
-    return filterContactsList;
-  };
+  //  const handleToggle = () => dispatch(toggleCompleted(contatc));
 
   return (
     <div
@@ -74,13 +46,11 @@ export const App = () => {
       }}
     >
       <h1>Phonebook</h1>
-      <ContactForm handleSubmit={handleSubmit} />
+      <ContactForm />
       <h2> Contacts</h2>
       <Filter />
-      <ContactList
-        contacts={getFilteredContacts()}
-        handleDelete={handleDelete}
-      />
+      {isLoading && !error && <Loader/>}
+      <ContactList />
     </div>
   );
 };
